@@ -33,7 +33,7 @@ git add config/i18n/fr.yml
 git commit -m "My translation update"
 # modifs locale uniquement
 
-# II - In a special branch (master, preprod, production, recette)
+# II - In a special branch ($BRANCH=(master|preprod|production|recette))
 
 # Local: édition normale
 # CI:
