@@ -18,3 +18,27 @@ git config --global fetch.recurseSubmodules on-demand
 git submodule deinit path/to/module
 git rm path/to/module
 ```
+
+
+## Translate subtree
+
+```shell
+# Tranlate separate project with subtree
+
+# I - In a branch
+
+git pull
+nano config/i18n/fr.yml # do some modifs
+git add config/i18n/fr.yml
+git commit -m "My translation update"
+# modifs locale uniquement
+
+# II - In a special branch (master, preprod, production, recette)
+
+# Local: édition normale
+# CI:
+#  à la fin
+git subtree push --prefix=config/i18n locales $BRANCH
+
+# TODO test conflicts
+```
