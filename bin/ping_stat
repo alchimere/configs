@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'logger'
+require 'net/ping'
+require 'time'
+
+HOST = "8.8.8.8"
+SLEEP_TIME = 5
+INDISPO_TIME = SLEEP_TIME * 2
+
+logfile_path = File.expand_path("log", ENV['HOME'])
+puts logfile_path
+FileUtils.mkdir_p(logfile_path)
+File.open(File.expand_path("ping_stat.log", logfile_path), "a") do |logfile|
+  last_ping = Time.now
+  indispo_in_progress = false
+
+  loop do
+    pinged = Net::Ping::External.new(HOST).ping?
+    now = Time.now
+    time_since_last_ping = (now - last_ping).to_i
+    if pinged
+      if indispo_in_progress
+        `notify-send "WEB is back (#{time_since_last_ping / 60}m#{time_since_last_ping % 60}s)"`
+        [$stdout, logfile].each do |io|
+          io.puts "#{now} Web is back (offline duration: #{time_since_last_ping / 60}m#{time_since_last_ping % 60}s)"
+          io.flush
+        end
+      end
+      last_ping = now
+      indispo_in_progress = false
+    elsif !indispo_in_progress
+      if time_since_last_ping > INDISPO_TIME
+        indispo_in_progress = true
+        `notify-send "WEB lost"`
+        [$stdout, logfile].each do |io|
+          io.puts "#{now} Web lost"
+          io.flush
+        end
+      end
+    end
+    sleep SLEEP_TIME
+  end
+end
