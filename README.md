@@ -37,3 +37,16 @@ if [ -f $GOMOD_FILE ];then
     # TODO execute linters here (https://golangci-lint.run/)
 fi
 ```
+
+## Bash aliases
+
+```bash
+alias grop='grep --include \*.go --include \*.rb --exclude \*.xo.go'
+
+# echo command line after reset terminal
+alias reset='(\reset; echo "\$>$(history | tail -n 1 | cut -d\  -f3-)")'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+```
